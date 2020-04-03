@@ -9,7 +9,14 @@ metadata:
 spec:
   strategy:
     jenkinsPipelineStrategy:
-      jenkinsfile: Jenkinsfile
+      jenkinsfile: |-
+        node('maven') {
+            stage 'build'
+            openshiftBuild(buildConfig: 'tasks', showBuildLogs: 'true')
+
+            stage 'deploy'
+            openshiftDeploy(deploymentConfig: 'tasks')
+        }
     type: JenkinsPipeline
   triggers:
   - github:
