@@ -7,10 +7,13 @@ metadata:
     name: tasks-pipeline
   name: tasks-pipeline
 spec:
+  source: 
+    git:
+      uri: "http://gogs.apps.ocp4demo.kee.vizuri.com/user-1/openshift-tasks.git"
+      ref: "eap-7"
   strategy:
     jenkinsPipelineStrategy:
-      jenkinsfile: Jenkinsfile
-    type: JenkinsPipeline
+      jenkinsfilePath: Jenkinsfile
   triggers:
   - github:
       secret: CzgPZAZ5m2
