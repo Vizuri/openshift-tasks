@@ -13,6 +13,11 @@ spec:
       ref: "eap-7"
   strategy:
     jenkinsPipelineStrategy:
+      env:
+      - name: DEV_PROJECT
+        value: dev-user0
+      - name: STAGE_PROJECT
+        value: stage-user0
       jenkinsfilePath: Jenkinsfile
   triggers:
   - github:

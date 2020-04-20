@@ -5,135 +5,20 @@ pipeline {
     label 'maven'
   }
   stages {
-    stage('Build App') {
-      steps {
-        git branch: 'eap-7', url: 'http://gogs.apps.ocp4demo.kee.vizuri.com/user-1/openshift-tasks.git'
-        script {
-            def pom = readMavenPom file: 'pom.xml'
-            version = pom.version
-        }
-        sh "${mvnCmd} install -DskipTests=true"
-      }
+    // Remove This Stage in Lab 2 
+    stage("Test") {
+      sh "echo "testing 123"
     }
-    stage('Test') {
-      steps {
-        sh "${mvnCmd} test"
-        step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
-      }
-    }
-    stage('Code Analysis') {
-      steps {
-        script {
-          sh "${mvnCmd} sonar:sonar -Dsonar.host.url=http://sonarqube:9000 -DskipTests=true"
-        }
-      }
-    }
-    stage('Archive App') {
-      steps {
-        sh "${mvnCmd} deploy -DskipTests=true -P nexus3"
-      }
-    }
-    stage('Create Image Builder') {
-      when {
-        expression {
-          openshift.withCluster() {
-            openshift.withProject(env.DEV_PROJECT) {
-              return !openshift.selector("bc", "tasks").exists();
-            }
-          }
-        }
-      }
-      steps {
-        script {
-          openshift.withCluster() {
-            openshift.withProject(env.DEV_PROJECT) {
-              openshift.newBuild("--name=tasks", "--image-stream=jboss-eap72-openshift:1.1", "--binary=true")
-            }
-          }
-        }
-      }
-    }
-    stage('Build Image') {
-      steps {
-        sh "rm -rf oc-build && mkdir -p oc-build/deployments"
-        sh "cp target/openshift-tasks.war oc-build/deployments/ROOT.war"
+    // Add Lab 2 Here
 
-        script {
-          openshift.withCluster() {
-            openshift.withProject(env.DEV_PROJECT) {
-              openshift.selector("bc", "tasks").startBuild("--from-dir=oc-build", "--wait=true")
-            }
-          }
-        }
-      }
-    }
-    stage('Create DEV') {
-      when {
-        expression {
-          openshift.withCluster() {
-            openshift.withProject(env.DEV_PROJECT) {
-              return !openshift.selector('dc', 'tasks').exists()
-            }
-          }
-        }
-      }
-      steps {
-        script {
-          openshift.withCluster() {
-            openshift.withProject(env.DEV_PROJECT) {
-              def app = openshift.newApp("tasks:latest")
-              app.narrow("svc").expose();
+    // Add Lab 3 Here
+ 
+    // Add Lab 4 Here
 
-              def dc = openshift.selector("dc", "tasks")
-              while (dc.object().spec.replicas != dc.object().status.availableReplicas) {
-                  sleep 10
-              }
-              openshift.set("triggers", "dc/tasks", "--manual")
-            }
-          }
-        }
-      }
-    }
-    stage('Deploy DEV') {
-      steps {
-        script {
-          openshift.withCluster() {
-            openshift.withProject(env.DEV_PROJECT) {
-              openshift.selector("dc", "tasks").rollout().latest();
-            }
-          }
-        }
-      }
-    }
-    stage('Promote to STAGE?') {
-      steps {
-        timeout(time:15, unit:'MINUTES') {
-            input message: "Promote to STAGE?", ok: "Promote"
-        }
+    // Add Lab 5 Here
 
-        script {
-          openshift.withCluster() {
-            openshift.tag("${env.DEV_PROJECT}/tasks:latest", "${env.STAGE_PROJECT}/tasks:${version}")
-          }
-        }
-      }
-    }
-    stage('Deploy STAGE') {
-      steps {
-        script {
-          openshift.withCluster() {
-            openshift.withProject(env.STAGE_PROJECT) {
-              if (openshift.selector('dc', 'tasks').exists()) {
-                openshift.selector('dc', 'tasks').delete()
-                openshift.selector('svc', 'tasks').delete()
-                openshift.selector('route', 'tasks').delete()
-              }
+    // Add Lab 6 Here
 
-              openshift.newApp("tasks:${version}").narrow("svc").expose()
-            }
-          }
-        }
-      }
-    }
+    // Add Lab 7 Here
   }
 }
