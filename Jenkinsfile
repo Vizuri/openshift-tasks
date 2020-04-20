@@ -64,6 +64,20 @@ pipeline {
       }
     }
     // Add Lab 8 Here
+    stage('Build Image') {
+      steps {
+        sh "rm -rf oc-build && mkdir -p oc-build/deployments"
+        sh "cp target/openshift-tasks.war oc-build/deployments/ROOT.war"
+
+        script {
+          openshift.withCluster() {
+            openshift.withProject("dev-student1") {
+              openshift.selector("bc", "tasks").startBuild("--from-dir=oc-build", "--wait=true")
+            }
+          }
+        }
+      }
+    }
 
     // Add Lab 9 Here
 
