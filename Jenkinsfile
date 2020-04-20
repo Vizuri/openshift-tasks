@@ -36,6 +36,11 @@ pipeline {
     }
 
     // Add Lab 6 Here
+    stage('Archive App') {
+      steps {
+        sh "${mvnCmd} deploy -DskipTests=true -P nexus3"
+      }
+    }
 
     // Add Lab 7 Here
   }
