@@ -7,7 +7,7 @@ pipeline {
   stages {
     // Remove This Stage in Lab 2 
     stage("Test") {
-      sh "echo "testing 123"
+      sh "echo 'testing 123'"
     }
     // Add Lab 2 Here
 
