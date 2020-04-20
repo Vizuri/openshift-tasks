@@ -119,6 +119,37 @@ pipeline {
         }
       }
     }
+    // Add Lab 10a Here
+    stage('Promote to STAGE?') {
+      steps {
+        timeout(time:15, unit:'MINUTES') {
+            input message: "Promote to STAGE?", ok: "Promote"
+        }
 
+        script {
+          openshift.withCluster() {
+            openshift.tag("dev-student1/tasks:latest", "stage-student1/tasks:${version}")
+          }
+        }
+      }
+    }
+    // Add Lib 10b Here
+    stage('Deploy STAGE') {
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject("stage-student1") {
+              if (openshift.selector('dc', 'tasks').exists()) {
+                openshift.selector('dc', 'tasks').delete()
+                openshift.selector('svc', 'tasks').delete()
+                openshift.selector('route', 'tasks').delete()
+              }
+
+              openshift.newApp("tasks:${version}").narrow("svc").expose()
+            }
+          }
+        }
+      }
+    }
   }
 }
