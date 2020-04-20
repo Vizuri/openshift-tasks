@@ -47,7 +47,7 @@ pipeline {
       when {
         expression {
           openshift.withCluster() {
-            openshift.withProject(env.DEV_PROJECT) {
+            openshift.withProject("dev-student1") {
               return !openshift.selector("bc", "tasks").exists();
             }
           }
@@ -56,7 +56,7 @@ pipeline {
       steps {
         script {
           openshift.withCluster() {
-            openshift.withProject(env.DEV_PROJECT) {
+            openshift.withProject("dev-student1") {
               openshift.newBuild("--name=tasks", "--image-stream=jboss-eap72-openshift:1.1", "--binary=true")
             }
           }
