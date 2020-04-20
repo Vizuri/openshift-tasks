@@ -84,7 +84,7 @@ pipeline {
       when {
         expression {
           openshift.withCluster() {
-            openshift.withProject(env.DEV_PROJECT) {
+            openshift.withProject("dev-student1") {
               return !openshift.selector('dc', 'tasks').exists()
             }
           }
@@ -93,7 +93,7 @@ pipeline {
       steps {
         script {
           openshift.withCluster() {
-            openshift.withProject(env.DEV_PROJECT) {
+            openshift.withProject("dev-student1") {
               def app = openshift.newApp("tasks:latest")
               app.narrow("svc").expose();
 
