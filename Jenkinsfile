@@ -80,7 +80,33 @@ pipeline {
     }
 
     // Add Lab 9 Here
+    stage('Create DEV') {
+      when {
+        expression {
+          openshift.withCluster() {
+            openshift.withProject(env.DEV_PROJECT) {
+              return !openshift.selector('dc', 'tasks').exists()
+            }
+          }
+        }
+      }
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject(env.DEV_PROJECT) {
+              def app = openshift.newApp("tasks:latest")
+              app.narrow("svc").expose();
 
+              def dc = openshift.selector("dc", "tasks")
+              while (dc.object().spec.replicas != dc.object().status.availableReplicas) {
+                  sleep 10
+              }
+              openshift.set("triggers", "dc/tasks", "--manual")
+            }
+          }
+        }
+      }
+    }
 
   }
 }
