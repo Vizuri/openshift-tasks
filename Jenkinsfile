@@ -43,5 +43,30 @@ pipeline {
     }
 
     // Add Lab 7 Here
+    stage('Create Image Builder') {
+      when {
+        expression {
+          openshift.withCluster() {
+            openshift.withProject(env.DEV_PROJECT) {
+              return !openshift.selector("bc", "tasks").exists();
+            }
+          }
+        }
+      }
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject(env.DEV_PROJECT) {
+              openshift.newBuild("--name=tasks", "--image-stream=jboss-eap72-openshift:1.1", "--binary=true")
+            }
+          }
+        }
+      }
+    }
+    // Add Lab 8 Here
+
+    // Add Lab 9 Here
+
+
   }
 }
