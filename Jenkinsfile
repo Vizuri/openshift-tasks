@@ -19,6 +19,12 @@ pipeline {
     }
  
     // Add Lab 4 Here
+    stage('Test') {
+      steps {
+        sh "${mvnCmd} test"
+        step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
+      }
+    }
 
     // Add Lab 5 Here
 
