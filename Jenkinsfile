@@ -5,14 +5,12 @@ pipeline {
     label 'maven'
   }
   stages {
-    // Remove This Stage in Lab 2 
+    // Remove This Stage in Lab 3 
     stage("Test") {
         steps {
             sh "echo 'testing 123'"
         }
     }
-    // Add Lab 2 Here
-
     // Add Lab 3 Here
  
     // Add Lab 4 Here
