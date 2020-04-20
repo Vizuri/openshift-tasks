@@ -5,15 +5,18 @@ pipeline {
     label 'maven'
   }
   stages {
-    // Remove This Stage in Lab 3 
-    stage("Test") {
-        steps {
-            sh "echo 'testing 123'"
-        }
-    }
-    // End Remove
-
+      
     // Add Lab 3 Here
+    stage('Build App') {
+      steps {
+        git branch: 'eap-7', url: 'http://gogs.apps.ocp4demo.kee.vizuri.com/student1/openshift-tasks.git'
+        script {
+            def pom = readMavenPom file: 'pom.xml'
+            version = pom.version
+        }
+        sh "${mvnCmd} install -DskipTests=true"
+      }
+    }
  
     // Add Lab 4 Here
 
