@@ -112,7 +112,7 @@ pipeline {
       steps {
         script {
           openshift.withCluster() {
-            openshift.withProject(env.DEV_PROJECT) {
+            openshift.withProject("dev-student1") {
               openshift.selector("dc", "tasks").rollout().latest();
             }
           }
