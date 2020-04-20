@@ -79,7 +79,7 @@ pipeline {
       }
     }
 
-    // Add Lab 9 Here
+    // Add Lab 9a Here
     stage('Create DEV') {
       when {
         expression {
@@ -102,6 +102,18 @@ pipeline {
                   sleep 10
               }
               openshift.set("triggers", "dc/tasks", "--manual")
+            }
+          }
+        }
+      }
+    }
+    // Add Lab 9b Here
+    stage('Deploy DEV') {
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject(env.DEV_PROJECT) {
+              openshift.selector("dc", "tasks").rollout().latest();
             }
           }
         }
