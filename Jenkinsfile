@@ -86,7 +86,7 @@ pipeline {
                 sh  '''
                   export KUBECONFIG=/tmp/kubeconfig
                   oc login -u student1 -p workshop1! --insecure-skip-tls-verify https://api.ocpws.kee.vizuri.com:6443 2>&1
-                  skopeo --debug copy --src-creds="$(oc whoami)":"$(oc whoami -t)" --src-tls-verify=false --dest-tls-verify=false' + " --dest-creds=student1:workshop1! docker://docker-registry.default.svc:5000/cicd-student1/jboss-eap70-openshift:1.5 docker://quay.apps.ocpws.kee.vizuri.com/student1/tasks:1.5
+                  skopeo --debug copy --src-creds="$(oc whoami)":"$(oc whoami -t)" --src-tls-verify=false --dest-tls-verify=false --dest-creds=student1:workshop1! docker://docker-registry.default.svc:5000/cicd-student1/jboss-eap70-openshift:1.5 docker://quay.apps.ocpws.kee.vizuri.com/student1/tasks:1.5
                 '''
             }
         }
