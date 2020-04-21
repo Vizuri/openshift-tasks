@@ -80,16 +80,15 @@ pipeline {
     }
 
     // Add Lab 11 Here
-
     stage('Clair Container Vulnerability Scan') {
       steps {
-            sh "oc login -u student1 -p workshop1! --insecure-skip-tls-verify https://api.ocpws.kee.vizuri.com:6443 2>&1"
             container("skopeo") {
-                sh 'skopeo --debug copy --src-creds="$(oc whoami)":"$(oc whoami -t)" --src-tls-verify=false --dest-tls-verify=false' + " --dest-creds=$quayuser:$quaypass docker://docker-registry.default.svc:5000/cicd-$ocuser/jboss-eap70-openshift:1.5 docker://quay-enterprise-quay-enterprise.apps.$ocp/$quayuser/$quayrepo:1.5"
+                sh "oc login -u student1 -p workshop1! --insecure-skip-tls-verify https://api.ocpws.kee.vizuri.com:6443 2>&1"
+                sh 'skopeo --debug copy --src-creds="$(oc whoami)":"$(oc whoami -t)" --src-tls-verify=false --dest-tls-verify=false' + " --dest-creds=student1:workshop1! docker://docker-registry.default.svc:5000/cicd-student1/jboss-eap70-openshift:1.5 docker://quay.apps.ocpws.kee.vizuri.com/student1/tasks:1.5"
             }
         }
     }
-
+https://quay.apps.ocpws.kee.vizuri.com
     // Add Lab 9a Here
     stage('Create DEV') {
       when {
