@@ -91,7 +91,7 @@ pipeline {
             }
         }
     }
-https://quay.apps.ocpws.kee.vizuri.com
+
     // Add Lab 9a Here
     stage('Create DEV') {
       when {
